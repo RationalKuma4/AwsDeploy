@@ -1,19 +1,19 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Dynamo stack for cross cloud example
+Description: Dynamo stack for ci example
 Resources:
-  MeasuresTable:
+  ExampleTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: cco-measures
+      TableName: Example
       AttributeDefinitions:
-        - AttributeName: Location
+        - AttributeName: Example
           AttributeType: "N"
-        - AttributeName: TimeStamp
+        - AttributeName: ExampleStamp
           AttributeType: "S"
       KeySchema:
-        - AttributeName: Location
+        - AttributeName: Example
           KeyType: HASH
-        - AttributeName: TimeStamp
+        - AttributeName: ExampleStamp
           KeyType: RANGE
       BillingMode: PAY_PER_REQUEST

@@ -1,0 +1,31 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates a ci user for github actions
+Parameters:
+  Username:
+    Type: String
+    Default: ci-user
+  Password:
+    Type: String
+    Default: Abcd1234/*-.
+    NoEcho: true
+Resources:
+  AppUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Ref Username
+      LoginProfile:
+        Password: !Ref Password
+        PasswordResetRequired: false
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/IAMFullAccess
+        - arn:aws:iam::aws:policy/PowerUserAccess
+  UserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref AppUser
+Outputs:
+  UserAccessKey:
+    Value: !Ref UserAccessKey
+  UserAccessKeySecretKey:
+    Value: !GetAtt UserAccessKey.SecretAccessKey
