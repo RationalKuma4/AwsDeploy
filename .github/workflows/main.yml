@@ -25,14 +25,31 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
-
-      - name: Deploy demo stack
-        uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
+      - name: Get Time
+        id: time
+        uses: nanzm/get-time-action@v1.1
         with:
-          name: ${{ steps.extract_branch.outputs.branch }}-dynamo
-          template: https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
-          no-fail-on-empty-changeset: "1"
+          timeZone: 8
+          format: "YYYY-MM-DD-HH-mm-ss"
+
+      - uses: shallwefootball/s3-upload-action@master
+        name: Upload template to S3
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: "../../infra/**/*.yaml"
+          destination_dir: "${{ steps.time.outputs.time }}/dynamo"
+
+      # - name: Branch name
+      #   shell: bash
+      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      #   id: extract_branch
+
+      # - name: Deploy demo stack
+      #   uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
+      #   with:
+      #     name: ${{ steps.extract_branch.outputs.branch }}-dynamo
+      #     template: https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
+      #     no-fail-on-empty-changeset: "1"
