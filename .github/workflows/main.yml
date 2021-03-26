@@ -13,8 +13,6 @@ jobs:
   deployment:
     name: Deploy stack to AWS
     runs-on: ubuntu-latest
-    outputs:
-      env-name: ${{ steps.env-name.outputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,6 +33,6 @@ jobs:
       - name: Deploy demo stack
         uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
         with:
-          name: ${{ steps.env-name.outputs.environment }}-${{ steps.extract_branch.outputs.branch }}-dynamo
+          name: ${{ steps.extract_branch.outputs.branch }}-dynamo
           template: https://s3.amazonaws.com/aws-quickstart/quickstart-amazon-eks/templates/amazon-eks-master.template.yaml
           no-fail-on-empty-changeset: "1"
