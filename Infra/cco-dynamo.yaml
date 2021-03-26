@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Dynamo stack for cross cloud example
+Resources:
+  MeasuresTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: cco-measures
+      AttributeDefinitions:
+        - AttributeName: Location
+          AttributeType: "N"
+        - AttributeName: TimeStamp
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: Location
+          KeyType: HASH
+        - AttributeName: TimeStamp
+          KeyType: RANGE
+      BillingMode: PAY_PER_REQUEST
