@@ -20,6 +20,15 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/IAMFullAccess
         - arn:aws:iam::aws:policy/PowerUserAccess
+      Policies:
+        - PolicyName: s3Actions
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Resource: arn:aws:s3:::post-artifacts
+                Action:
+                  - s3:*Object
   UserAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
