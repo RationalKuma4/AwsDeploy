@@ -10,6 +10,12 @@ Parameters:
     Default: Abcd1234/*-.
     NoEcho: true
 Resources:
+  # Bucket for the artifacts
+  ArtifactBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "artifacts-demos-${AWS::Region}"
+  # User to access AWS
   AppUser:
     Type: AWS::IAM::User
     Properties:
@@ -17,24 +23,43 @@ Resources:
       LoginProfile:
         Password: !Ref Password
         PasswordResetRequired: false
+      # Polcies to run stack in CloudFormation
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/IAMFullAccess
         - arn:aws:iam::aws:policy/PowerUserAccess
+      # Inline policy to read and write in the bucket
       Policies:
         - PolicyName: s3Actions
           PolicyDocument:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Resource: 
-                  - arn:aws:s3:::post-artifacts
-                  - arn:aws:s3:::post-artifacts/*
+                Resource:
+                  - !GetAtt "ArtifactBucket.Arn" # the bucket
+                  - !Sub "${ArtifactBucket.Arn}/*" # all the objects
                 Action:
                   - s3:*Object
+  # Generate user access key and secret key
   UserAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
       UserName: !Ref AppUser
+  # Policy bucket to let the user read and write
+  ArtifactBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref ArtifactBucket
+      PolicyDocument:
+        Statement:
+          - Action:
+              - "s3:*Object"
+            Effect: Allow
+            Resource:
+              - !GetAtt "ArtifactBucket.Arn" # the bucket
+              - !Sub "${ArtifactBucket.Arn}/*" # all the objects
+            Principal:
+              AWS: !GetAtt "AppUser.Arn"
+# Access key and secret key to use with GitHub Actions
 Outputs:
   UserAccessKey:
     Value: !Ref UserAccessKey
