@@ -52,5 +52,5 @@ jobs:
         uses: aws-actions/aws-cloudformation-github-deploy@v1.0.3
         with:
           name: ${{ steps.extract_branch.outputs.branch }}-dynamo
-          template: https://${{ secrets.AWS_BUCKET }}.s3.amazonaws.com/${{ steps.time.outputs.time }}/ci-dynamo.yaml
+          template: https://${{ secrets.AWS_BUCKET }}.s3.amazonaws.com/${{ github.event.repository.name }}/${{ steps.extract_branch.outputs.branch }}/${{ steps.time.outputs.time }}/ci-dynamo.yaml
           no-fail-on-empty-changeset: "1"
