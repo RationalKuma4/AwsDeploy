@@ -30,7 +30,8 @@ Resources:
                   - arn:aws:s3:::post-artifacts
                   - arn:aws:s3:::post-artifacts/*
                 Action:
-                  - s3:*Object
+                  - s3:PutObject
+                  - s3:GetObject
   UserAccessKey:
     Type: AWS::IAM::AccessKey
     Properties:
