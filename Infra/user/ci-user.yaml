@@ -7,7 +7,7 @@ Parameters:
     Default: ci-user
   Password:
     Type: String
-    Default: Abcd1234/*-.
+    Default: Aabbcc.
     NoEcho: true
 Resources:
   # Bucket for the artifacts
